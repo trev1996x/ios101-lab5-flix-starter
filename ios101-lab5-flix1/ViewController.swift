@@ -7,20 +7,32 @@ import UIKit
 import Nuke
 
 // TODO: Add table view data source conformance
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("🍏 numberOfRowsInSection called with movies count: \(movies.count)")
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        let movie = movies[indexPath.row]
+        cell.textLabel?.text = movie.title
+        print("🍏 cellForRowAt called for row: \(indexPath.row)")
+        return cell
+    }
+    
 
+    private var movies: [Movie] = []
 
-    // TODO: Add table view outlet
-
-
-    // TODO: Add property to store fetched movies array
+    
+    @IBOutlet weak var tableView: UITableView!
+    
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // TODO: Assign table view data source
-
+        tableView.dataSource = self
 
         fetchMovies()
     }
@@ -78,9 +90,9 @@ class ViewController: UIViewController {
                         print("Overview: \(movie.overview)")
                     }
 
-                    // TODO: Store movies in the `movies` property on the view controller
-
-
+                    self?.movies = movies
+                    self?.tableView.reloadData()
+                    print("🍏 Fetched and stored \(movies.count) movies")
 
                 }
             } catch {
@@ -92,6 +104,4 @@ class ViewController: UIViewController {
         // Don't forget to run the session!
         session.resume()
     }
-
-
 }
